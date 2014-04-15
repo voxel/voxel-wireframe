@@ -2,6 +2,7 @@
   "name": "voxel-wireframe",
   "description": "",
   "version": "0.0.1",
+  "main": "wire.js",
   "repository": {
     "type": "git",
     "url": "git@github.com:deathcap/voxel-wireframe.git"
@@ -10,8 +11,8 @@
     "voxel"
   ],
   "dependencies": {
+    "gl-shader": "^3.0.0"
   },
-  "peerDependencies": {
-  },
+  "peerDependencies": {},
   "license": "MIT"
 }
