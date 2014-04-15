@@ -45,10 +45,11 @@ WireframePlugin.prototype.render = function() {
     this.wireShader.uniforms.model = this.shell.model
     this.wireShader.uniforms.view = this.shell.view
 
-    if(this.shell.mesh) {
-      this.shell.mesh.wireVAO.bind() // TODO: refactor wireVAO, created in voxel-mesher. add an event there for voxel-wireframe?
-      gl.drawArrays(gl.LINES, 0, this.shell.mesh.wireVertexCount)
-      this.shell.mesh.wireVAO.unbind()
+    for (var i = 0; i < this.shell.meshes.length; ++i) {
+      var mesh = this.shell.meshes[i];
+      mesh.wireVAO.bind() // TODO: refactor wireVAO, created in voxel-mesher. add an event there for voxel-wireframe?
+      gl.drawArrays(gl.LINES, 0, mesh.wireVertexCount)
+      mesh.wireVAO.unbind()
     }
   }
 };
