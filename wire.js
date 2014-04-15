@@ -12,6 +12,8 @@ module.exports.pluginInfo = {
 function WireframePlugin(game, opts) {
   this.shell = game.shell;
 
+  this.showWireframe = opts.showWireframe !== undefined ? opts.showWireframe : false
+
   this.enable();
 }
 
@@ -32,7 +34,7 @@ WireframePlugin.prototype.disable = function() {
 };
 
 WireframePlugin.prototype.render = function() {
-  if(this.shell.wasDown('wireframe')) {
+  if(this.showWireframe || this.shell.wasDown('wireframe')) {
     var gl = this.shell.gl
 
     //Bind the wire shader
