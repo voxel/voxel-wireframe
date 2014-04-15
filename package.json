@@ -1,6 +1,6 @@
 {
   "name": "voxel-wireframe",
-  "description": "",
+  "description": "wireframe shader for voxels",
   "version": "0.0.1",
   "main": "wire.js",
   "repository": {
@@ -8,7 +8,10 @@
     "url": "git@github.com:deathcap/voxel-wireframe.git"
   },
   "keywords": [
-    "voxel"
+    "voxel",
+    "wireframe",
+    "shader",
+    "rendering"
   ],
   "dependencies": {
     "gl-shader": "^3.0.0"
