@@ -11,6 +11,7 @@ module.exports.pluginInfo = {
 
 function WireframePlugin(game, opts) {
   this.shell = game.shell;
+  if (!this.shell) throw new Error('voxel-wireframe requires game-shell-voxel');
 
   this.showWireframe = opts.showWireframe !== undefined ? opts.showWireframe : false
 
