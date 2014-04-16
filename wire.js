@@ -7,7 +7,7 @@ module.exports = function(game, opts) {
 };
 module.exports.pluginInfo = {
   clientOnly: true,
-  loadAfter: ['voxel-shader'],
+  loadAfter: ['voxel-shader', 'voxel-mesher'],
 };
 
 function WireframePlugin(game, opts) {
@@ -16,6 +16,9 @@ function WireframePlugin(game, opts) {
 
   this.shaderPlugin = game.plugins.get('voxel-shader');
   if (!this.shaderPlugin) throw new Error('voxel-wireframe requires voxel-shader plugin');
+
+  this.mesherPlugin = game.plugins.get('voxel-mesher');
+  if (!this.mesherPlugin) throw new Error('voxel-wireframe requires voxel-mesher plugin'); // TODO: voxels.meshes
 
   this.showWireframe = opts.showWireframe !== undefined ? opts.showWireframe : false;
 
@@ -49,8 +52,8 @@ WireframePlugin.prototype.render = function() {
     this.wireShader.uniforms.model = this.shaderPlugin.modelMatrix
     this.wireShader.uniforms.view = this.shaderPlugin.viewMatrix
 
-    for (var i = 0; i < this.shell.meshes.length; ++i) {
-      var mesh = this.shell.meshes[i];
+    for (var i = 0; i < this.mesherPlugin.meshes.length; ++i) {
+      var mesh = this.mesherPlugin.meshes[i];
       mesh.wireVAO.bind() // TODO: refactor wireVAO, created in voxel-mesher. add an event there for voxel-wireframe?
       gl.drawArrays(gl.LINES, 0, mesh.wireVertexCount)
       mesh.wireVAO.unbind()
