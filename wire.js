@@ -6,14 +6,18 @@ module.exports = function(game, opts) {
   return new WireframePlugin(game, opts);
 };
 module.exports.pluginInfo = {
-  clientOnly: true
+  clientOnly: true,
+  loadAfter: ['voxel-shader'],
 };
 
 function WireframePlugin(game, opts) {
   this.shell = game.shell;
   if (!this.shell) throw new Error('voxel-wireframe requires game-shell-voxel');
 
-  this.showWireframe = opts.showWireframe !== undefined ? opts.showWireframe : false
+  this.shaderPlugin = game.plugins.get('voxel-shader');
+  if (!this.shaderPlugin) throw new Error('voxel-wireframe requires voxel-shader plugin');
+
+  this.showWireframe = opts.showWireframe !== undefined ? opts.showWireframe : false;
 
   this.enable();
 }
@@ -41,9 +45,9 @@ WireframePlugin.prototype.render = function() {
     //Bind the wire shader
     this.wireShader.bind()
     this.wireShader.attributes.position.location = 0
-    this.wireShader.uniforms.projection = this.shell.projection
-    this.wireShader.uniforms.model = this.shell.model
-    this.wireShader.uniforms.view = this.shell.view
+    this.wireShader.uniforms.projection = this.shaderPlugin.projectionMatrix
+    this.wireShader.uniforms.model = this.shaderPlugin.modelMatrix
+    this.wireShader.uniforms.view = this.shaderPlugin.viewMatrix
 
     for (var i = 0; i < this.shell.meshes.length; ++i) {
       var mesh = this.shell.meshes[i];
