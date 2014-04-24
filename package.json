@@ -14,7 +14,11 @@
     "rendering"
   ],
   "dependencies": {
-    "gl-shader": "^3.0.0"
+    "gl-shader": "^3.0.0",
+    "ndarray": "^1.0.13",
+    "ndarray-ops": "^1.2.1",
+    "gl-buffer": "^2.0.6",
+    "gl-vao": "^1.1.2"
   },
   "peerDependencies": {},
   "license": "MIT"
