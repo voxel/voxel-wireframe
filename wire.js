@@ -50,9 +50,10 @@ WireframePlugin.prototype.disable = function() {
 
 WireframePlugin.prototype.createWireMesh = function(mesh, gl, vert_data) {
   //Create wire mesh
-  var wireVertexCount = 2 * mesh.triangleVertexCount
-  var wireVertexArray = ndarray(new Uint8Array(wireVertexCount * 3), [mesh.triangleVertexCount, 2, 3])
-  var trianglePositions = ndarray(vert_data, [mesh.triangleVertexCount, 3], [8, 1], 0)
+  var triangleVertexCount = !mesh.vertexArrayObjects.surface ? 0 : mesh.vertexArrayObjects.surface.length
+  var wireVertexCount = 2 * triangleVertexCount
+  var wireVertexArray = ndarray(new Uint8Array(wireVertexCount * 3), [triangleVertexCount, 2, 3])
+  var trianglePositions = ndarray(vert_data, [triangleVertexCount, 3], [8, 1], 0)
   ops.assign(wireVertexArray.pick(undefined, 0, undefined), trianglePositions)
   var wires = wireVertexArray.pick(undefined, 1, undefined)
   for(var i=0; i<3; ++i) {
@@ -68,9 +69,9 @@ WireframePlugin.prototype.createWireMesh = function(mesh, gl, vert_data) {
       "normalized": false
     }
   ])
+  wireVAO.length = wireVertexCount
 
-  mesh.wireVertexCount = wireVertexCount
-  mesh.wireVAO = wireVAO
+  mesh.vertexArrayObjects.wireframe = wireVAO
 };
 
 WireframePlugin.prototype.render = function() {
@@ -86,9 +87,10 @@ WireframePlugin.prototype.render = function() {
     for (var chunkIndex in this.game.voxels.meshes) {
       var mesh = this.game.voxels.meshes[chunkIndex];
       this.wireShader.uniforms.model = mesh.modelMatrix
-      mesh.wireVAO.bind() // set in createWireMesh() above
-      gl.drawArrays(gl.LINES, 0, mesh.wireVertexCount)
-      mesh.wireVAO.unbind()
+      var wireVAO = mesh.vertexArrayObjects.wireframe // set in createWireMesh() above
+      wireVAO.bind()
+      gl.drawArrays(gl.LINES, 0, wireVAO.length)
+      wireVAO.unbind()
     }
   }
 };
