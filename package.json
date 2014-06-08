@@ -1,7 +1,7 @@
 {
   "name": "voxel-wireframe",
   "description": "wireframe shader for voxels",
-  "version": "0.4.0",
+  "version": "0.5.0",
   "main": "wire.js",
   "repository": {
     "type": "git",
