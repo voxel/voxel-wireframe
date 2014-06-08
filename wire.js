@@ -28,12 +28,13 @@ function WireframePlugin(game, opts) {
   this.keysPlugin = game.plugins.get('voxel-keys'); // optional
 
   this.showWireframe = opts.showWireframe !== undefined ? opts.showWireframe : false;
+  this.requireShift = opts.requireShift !== undefined ? opts.requireShift : true;
 
   this.enable();
 }
 
 WireframePlugin.prototype.enable = function() {
-  this.shell.bind('wireframe', 'F');
+  this.shell.bind('wireframe', 'F9');
   if (this.keysPlugin) this.keysPlugin.down.on('wireframe', this.onToggle = this.toggle.bind(this));
   this.shell.on('gl-init', this.onInit = this.shaderInit.bind(this));
   this.shell.on('gl-render', this.onRender = this.render.bind(this));
@@ -54,7 +55,8 @@ WireframePlugin.prototype.shaderInit = function() {
     fragment: './wire-shader.frag'})(this.shell.gl);
 };
 
-WireframePlugin.prototype.toggle = function() {
+WireframePlugin.prototype.toggle = function(ev) {
+  if (this.requireShift && !ev.shiftKey) return;
   this.showWireframe = !this.showWireframe;
 };
 
@@ -85,7 +87,7 @@ WireframePlugin.prototype.createWireMesh = function(mesh, gl, vert_data) {
 };
 
 WireframePlugin.prototype.render = function() {
-  if(this.showWireframe || this.shell.wasDown('wireframe')) {
+  if(this.showWireframe) {
     var gl = this.shell.gl
 
     //Bind the wire shader

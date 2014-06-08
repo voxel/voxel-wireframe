@@ -10,7 +10,8 @@ Load with [voxel-plugins](https://github.com/deathcap/voxel-plugins), options:
 
 * `showWireframe`: if true, wireframe will be shown initially (default false)
 
-Press and hold the 'wireframe' keybinding (default 'F') to enable the wireframe interactively.
+Press and the 'wireframe' keybinding (default 'F9') with the Shift key to toggle the wireframe interactively
+(without shift, F9 by default toggles [voxel-chunkborder](https://github.com/deathcap/voxel-chunkborder)).
 
 `.showWireframe` property can be set to manually show the wireframe, example:
 
