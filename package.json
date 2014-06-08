@@ -18,7 +18,13 @@
     "ndarray": "^1.0.13",
     "ndarray-ops": "^1.2.1",
     "gl-buffer": "^2.0.6",
-    "gl-vao": "^1.1.2"
+    "gl-vao": "^1.1.2",
+    "glslify": "^1.4.0"
+  },
+  "browserify": {
+    "transform": [
+      "glslify"
+    ]
   },
   "peerDependencies": {},
   "license": "MIT"

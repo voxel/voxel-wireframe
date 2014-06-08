@@ -1,10 +1,10 @@
 'use strict';
 
-var createWireShader = require('./wireShader.js');
 var ndarray = require('ndarray');
 var ops = require('ndarray-ops');
 var createBuffer = require('gl-buffer');
 var createVAO = require('gl-vao');
+var glslify = require('glslify');
 
 module.exports = function(game, opts) {
   return new WireframePlugin(game, opts);
@@ -38,7 +38,9 @@ WireframePlugin.prototype.enable = function() {
 };
 
 WireframePlugin.prototype.shaderInit = function() {
-  this.wireShader = createWireShader(this.shell.gl);
+  this.wireShader = glslify({
+    vertex: './wire-shader.vert',
+    fragment: './wire-shader.frag'})(this.shell.gl);
 };
 
 WireframePlugin.prototype.disable = function() {
