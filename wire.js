@@ -11,7 +11,7 @@ module.exports = function(game, opts) {
 };
 module.exports.pluginInfo = {
   clientOnly: true,
-  loadAfter: ['voxel-shader', 'voxel-mesher'],
+  loadAfter: ['voxel-shader', 'voxel-mesher', 'voxel-keys'],
 };
 
 function WireframePlugin(game, opts) {
@@ -25,6 +25,8 @@ function WireframePlugin(game, opts) {
   this.mesherPlugin = game.plugins.get('voxel-mesher');
   if (!this.mesherPlugin) throw new Error('voxel-wireframe requires voxel-mesher plugin');
 
+  this.keysPlugin = game.plugins.get('voxel-keys'); // optional
+
   this.showWireframe = opts.showWireframe !== undefined ? opts.showWireframe : false;
 
   this.enable();
@@ -32,9 +34,18 @@ function WireframePlugin(game, opts) {
 
 WireframePlugin.prototype.enable = function() {
   this.shell.bind('wireframe', 'F');
+  if (this.keysPlugin) this.keysPlugin.down.on('wireframe', this.onToggle = this.toggle.bind(this));
   this.shell.on('gl-init', this.onInit = this.shaderInit.bind(this));
   this.shell.on('gl-render', this.onRender = this.render.bind(this));
   this.mesherPlugin.on('meshed', this.onMeshed = this.createWireMesh.bind(this));
+};
+
+WireframePlugin.prototype.disable = function() {
+  this.mesherPlugin.removeListener('meshed', this.onMeshed);
+  this.shell.removeListener('gl-render', this.onRender);
+  this.shell.removeListener('gl-init', this.onInit);
+  if (this.keysPlugin) this.keysPlugin.down.removeListener('wireframe', this.onToggle);
+  this.shell.unbind('wireframe');
 };
 
 WireframePlugin.prototype.shaderInit = function() {
@@ -43,11 +54,8 @@ WireframePlugin.prototype.shaderInit = function() {
     fragment: './wire-shader.frag'})(this.shell.gl);
 };
 
-WireframePlugin.prototype.disable = function() {
-  this.mesherPlugin.removeListener('meshed', this.onMeshed);
-  this.shell.removeListener('gl-render', this.onRender);
-  this.shell.removeListener('gl-init', this.onInit);
-  this.shell.unbind('wireframe');
+WireframePlugin.prototype.toggle = function() {
+  this.showWireframe = !this.showWireframe;
 };
 
 WireframePlugin.prototype.createWireMesh = function(mesh, gl, vert_data) {
