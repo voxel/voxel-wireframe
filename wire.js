@@ -56,7 +56,7 @@ WireframePlugin.prototype.shaderInit = function() {
 };
 
 WireframePlugin.prototype.toggle = function(ev) {
-  if (this.requireShift && !ev.shiftKey) return;
+  if (this.requireShift && ev && !ev.shiftKey) return;
   this.showWireframe = !this.showWireframe;
 };
 
