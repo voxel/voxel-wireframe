@@ -4,8 +4,8 @@ var ndarray = require('ndarray');
 var ops = require('ndarray-ops');
 var createBuffer = require('gl-buffer');
 var createVAO = require('gl-vao');
-var glslify = require('glslify');
 var mat4 = require('gl-mat4');
+var createSimpleShader = require('simple-3d-shader');
 
 module.exports = function(game, opts) {
   return new WireframePlugin(game, opts);
@@ -31,6 +31,8 @@ function WireframePlugin(game, opts) {
   this.showWireframe = opts.showWireframe !== undefined ? opts.showWireframe : false;
   this.requireShift = opts.requireShift !== undefined ? opts.requireShift : true;
 
+  this.color = opts.color ? opts.color : [0, 1, 0]; // green
+
   this.enable();
 }
 
@@ -51,9 +53,7 @@ WireframePlugin.prototype.disable = function() {
 };
 
 WireframePlugin.prototype.shaderInit = function() {
-  this.wireShader = glslify({
-    vertex: './wire-shader.vert',
-    fragment: './wire-shader.frag'})(this.shell.gl);
+  this.wireShader = createSimpleShader(this.shell.gl);
 };
 
 WireframePlugin.prototype.toggle = function(ev) {
@@ -98,6 +98,7 @@ WireframePlugin.prototype.render = function() {
     this.wireShader.attributes.position.location = 0
     this.wireShader.uniforms.projection = this.shaderPlugin.projectionMatrix
     this.wireShader.uniforms.view = this.shaderPlugin.viewMatrix
+    this.wireShader.attributes.color = this.color;
 
     for (var chunkIndex in this.game.voxels.meshes) {
       var mesh = this.game.voxels.meshes[chunkIndex];
