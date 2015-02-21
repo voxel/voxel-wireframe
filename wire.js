@@ -5,6 +5,7 @@ var ops = require('ndarray-ops');
 var createBuffer = require('gl-buffer');
 var createVAO = require('gl-vao');
 var glslify = require('glslify');
+var mat4 = require('gl-mat4');
 
 module.exports = function(game, opts) {
   return new WireframePlugin(game, opts);
@@ -86,6 +87,8 @@ WireframePlugin.prototype.createWireMesh = function(mesh, gl, vert_data) {
   mesh.vertexArrayObjects.wireframe = wireVAO
 };
 
+var modelMatrix = mat4.create();
+
 WireframePlugin.prototype.render = function() {
   if(this.showWireframe) {
     var gl = this.shell.gl
@@ -98,7 +101,16 @@ WireframePlugin.prototype.render = function() {
 
     for (var chunkIndex in this.game.voxels.meshes) {
       var mesh = this.game.voxels.meshes[chunkIndex];
-      this.wireShader.uniforms.model = mesh.modelMatrix
+
+      // compensate for voxel padding in voxel-mesher
+      var pad = -1;
+      mat4.translate(modelMatrix, mesh.modelMatrix, [pad, pad, pad]);
+
+      // avoid z-fighting with voxels and voxel-outline (0.001)
+      var epsilon = 0.00001;
+      mat4.scale(modelMatrix, modelMatrix, [1 + epsilon, 1 + epsilon, 1 + epsilon]);
+
+      this.wireShader.uniforms.model = modelMatrix
       var wireVAO = mesh.vertexArrayObjects.wireframe // set in createWireMesh() above
       wireVAO.bind()
       gl.drawArrays(gl.LINES, 0, wireVAO.length)
