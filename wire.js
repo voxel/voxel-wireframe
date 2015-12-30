@@ -18,7 +18,7 @@ module.exports.pluginInfo = {
 function WireframePlugin(game, opts) {
   this.game = game;
   this.shell = game.shell;
-  if (!this.shell) throw new Error('voxel-wireframe requires game-shell-voxel');
+  if (!this.shell) throw new Error('voxel-wireframe requires voxel-engine-stackgl');
 
   this.shaderPlugin = game.plugins.get('voxel-shader');
   if (!this.shaderPlugin) throw new Error('voxel-wireframe requires voxel-shader plugin');

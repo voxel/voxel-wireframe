@@ -1,6 +1,6 @@
 # voxel-wireframe
 
-Shows a wireframe around the voxels in [game-shell-voxel](https://github.com/deathcap/game-shell-voxel)
+Shows a wireframe around the voxels in [voxel-engine-stackgl](https://github.com/voxel/voxel-engine-stackgl)
 
 ![screenshot](http://i.imgur.com/gbooPeT.png "Screenshot")
 
